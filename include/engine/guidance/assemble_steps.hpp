@@ -96,6 +96,7 @@ std::vector<RouteStep> assembleSteps(const DataFacadeT &facade,
             // all changes to this check have to be matched with assemble_geometry
             if (path_point.turn_instruction.type != extractor::guidance::TurnType::NoTurn)
             {
+                std::cout << "Step: " << (int) path_point.turn_instruction.type << std::endl;
                 BOOST_ASSERT(segment_duration >= 0);
                 const auto name = facade.GetNameForID(step_name_id);
                 const auto distance = leg_geometry.segment_distances[segment_index];

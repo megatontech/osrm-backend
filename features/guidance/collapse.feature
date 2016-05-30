@@ -345,3 +345,38 @@ Feature: Collapse
             | a,d       | first,first,first,first | depart,continue left,continue right,arrive |
             | a,e       | first,second,second     | depart,turn left,arrive                    |
             | a,f       | first,third,third       | depart,turn straight,arrive                |
+
+     Scenario: Bridge on unnamed road
+        Given the node map
+            | a | b |   |   |   | c | d |
+
+        And the ways
+            | nodes | highway | name   |
+            | ab    | primary |        |
+            | bc    | primary | Bridge |
+            | cd    | primary |        |
+
+        When I route I should get
+            | waypoints | route | turns         |
+            | a,d       | ,     | depart,arrive |
+
+     Scenario: Crossing Bridge into Segregated Turn
+        Given the node map
+            |   |   |   |   |   | f |
+            | i | h |   |   | g | e |
+            | a | b |   |   | c | d |
+
+        And the ways
+            | nodes | highway | oneway | name        |
+            | ab    | primary | yes    | to_bridge   |
+            | bc    | primary | yes    | bridge      |
+            | cd    | primary | yes    | off_bridge  |
+            | de    | primary | yes    |             |
+            | ef    | primary | no     | target_road |
+            | eg    | primary | yes    | off_bridge  |
+            | gh    | primary | yes    | bridge      |
+            | hi    | primary | yes    | to_bridge   |
+
+        When I route I should get
+            | waypoints | route                             | turns                   |
+            | a,f       | to_bridge,target_road,target_road | depart,turn left,arrive |
